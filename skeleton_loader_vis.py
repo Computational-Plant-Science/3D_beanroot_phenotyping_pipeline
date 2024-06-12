@@ -268,7 +268,7 @@ def visualize_skeleton(current_path, filename_skeleton, filename_ptcloud):
     index = 0
     
     
-    #N_edges_skeleton = 3698
+    N_edges_skeleton = 8000
     
     # Create each line one after the other in a loop
     for i in range(N_edges_skeleton):

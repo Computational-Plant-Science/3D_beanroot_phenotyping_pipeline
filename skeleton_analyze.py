@@ -11,7 +11,7 @@ USAGE
 
     python3 skeleton_analyze.py -p ~/example/ -m1 test_skeleton.ply -m2 test_aligned.ply -m3 ~/example/slices/ -v 0
     
-    python3 skeleton_analyze.py -p /srv/test/ -m1 test_skeleton.ply -m2 test_aligned.ply -m3 /srv/test/slices/ -v 0
+    python3 /opt/code/skeleton_analyze.py -p /srv/test/ -m1 test_skeleton.ply -m2 test_aligned.ply -m3 /srv/test/slices/ -v 0
 
 
 argument:
@@ -54,7 +54,7 @@ import open3d as o3d
 import copy
 import shutil
 import argparse
-from dev_code import par_config
+#from dev_code import par_config
 import openpyxl
 from openpyxl import Workbook
 from openpyxl import load_workbook
@@ -310,13 +310,6 @@ def get_pt_parameter(Data_array_pt, n_paths):
         
     pt_diameter = (pt_diameter_max + pt_diameter_min)*0.5
     
-    pt_diameter_max*=par_config.match_par(min_distance_value, par_config.md_list, par_config.List_Par).distance_tracking_max
-    pt_diameter_min*=par_config.match_par(min_distance_value, par_config.md_list, par_config.List_Par).distance_tracking_min
-    
-    if n_paths > 0:
-        pt_diameter*=par_config.match_par(min_distance_value, par_config.md_list, par_config.List_Par).distance_tracking_avg
-    else:
-        pt_diameter*=par_config.match_par(min_distance_value, par_config.md_list, par_config.List_Par).thresh_distance_ratio
         
     return pt_diameter_max, pt_diameter_min, pt_diameter, pt_length, pt_volume, pt_density
     
@@ -994,7 +987,7 @@ def crosssection_scan(imgList, result_path):
         List_N_seg = List_N_seg[0: np.argmax(List_N_seg)]
     
     ###################################################################
-    #span = 3
+    span = 3
   
     List_N_seg_smooth = smooth_data_convolve_average(np.array(List_N_seg), span)
     
@@ -1123,7 +1116,7 @@ def crosssection_scan(imgList, result_path):
     n_whorl = int(len(N_count)/2)
     
 
-    
+    '''
     if N_2 > 40 and N_1 > 22:
             N_1*= 0.57
             
@@ -1144,7 +1137,7 @@ def crosssection_scan(imgList, result_path):
         R_1 = interp(R_1,[0.19,1],[0.0,0.19])
     if R_2 > 0.19:
         R_2 = interp(R_2,[0.19,1],[0.0,0.19])
-
+	'''
     return int(N_1), int(N_2), R_1, R_2, n_whorl
 
 
@@ -1185,9 +1178,9 @@ def get_radius(radius_arr):
 
     radius_arr = np.sort(radius_arr, axis = None)     
 
-    avg_third_diameter = radius_arr[0]*par_config.match_par(min_distance_value, par_config.md_list, par_config.List_Par).snake_speed_min
-    avg_second_diameter = radius_arr[1]*par_config.match_par(min_distance_value, par_config.md_list, par_config.List_Par).snake_speed_min
-    avg_first_diameter = radius_arr[2]*par_config.match_par(min_distance_value, par_config.md_list, par_config.List_Par).snake_speed_max
+    avg_third_diameter = radius_arr[0]
+    avg_second_diameter = radius_arr[1]
+    avg_first_diameter = radius_arr[2]
     
     return avg_first_diameter, avg_second_diameter, avg_third_diameter
     
@@ -1323,7 +1316,7 @@ def analyze_skeleton(current_path, filename_skeleton, filename_ptcloud, imgList)
     sub_branch_ys_rec = []
     sub_branch_zs_rec = []
     
-    #factor = 0.77
+    factor = 0.77
     
     #if len(end_vlist) == len(end_vlist_offset):
         
@@ -1348,7 +1341,7 @@ def analyze_skeleton(current_path, filename_skeleton, filename_ptcloud, imgList)
         end_v = [X_skeleton[int_v_list[0]] - X_skeleton[int_v_list[int(len(int_v_list)-1.0)]], Y_skeleton[int_v_list[0]] - Y_skeleton[int_v_list[int(len(int_v_list)-1.0)]], Z_skeleton[int_v_list[0]] - Z_skeleton[int_v_list[int(len(int_v_list)-1.0)]]]
         
         # angle of current branch vs Z direction
-        angle_sub_branch = dot_product_angle(start_v, end_v)*par_config.match_par(min_distance_value, par_config.md_list, par_config.List_Par).dis_tracking_ratio
+        angle_sub_branch = dot_product_angle(start_v, end_v)*factor
         
         # projection radius of current branch length
         p0 = np.array([X_skeleton[int_v_list[0]], Y_skeleton[int_v_list[0]], Z_skeleton[int_v_list[0]]])
@@ -1645,9 +1638,8 @@ def analyze_skeleton(current_path, filename_skeleton, filename_ptcloud, imgList)
         
         avg_volume = pt_volume
         
-        wdis_1 = R_1*pt_length*par_config.match_par(min_distance_value, par_config.md_list, par_config.List_Par).kernel_max_radius
-        
-        wdis_2 = R_2*pt_length*par_config.match_par(min_distance_value, par_config.md_list, par_config.List_Par).kernel_min_radius
+        wdis_1 = R_1
+        wdis_2 = R_2
         
         #print("pt_diameter_max = {} pt_diameter_min = {} pt_diameter = {} pt_length = {} pt_volume = {}\n".format(pt_diameter_max, pt_diameter_min, pt_diameter, pt_length, pt_volume))
         
@@ -1944,14 +1936,9 @@ if __name__ == '__main__':
 
     ############################################################################################################
 
-    
-    (idx_list, min_distance_value) = (closest(par_config.md_list, args['min_dis'] ))
-    
-    span = args['span']
-    
-    print("Matched Min dis = {}\n".format(min_distance_value))
- 
 
+
+    min_distance_value = args['min_dis']
     
     #############################################################################################
     
