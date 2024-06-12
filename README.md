@@ -92,7 +92,7 @@ docker run -v /$path_to_your_3D_model:/srv/test -it computationalplantscience/3d
 
 4. Run the pipeline inside the container
 ```shell
-python3 /opt/code/pipeline.py -i /srv/test/$your_3D_model_name.ply -o /srv/test/$result/ -md 35 -n 1000
+python3 /opt/code/pipeline.py -i /srv/test/$your_3D_model_name.ply -o /srv/test/$result/ 
 
 
 ```

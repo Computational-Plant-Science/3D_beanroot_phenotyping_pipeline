@@ -10,13 +10,26 @@ Author-email: suxingliu@gmail.com
 USAGE:
 
 
-    python3 /opt/code/pipeline.py -i /srv/test/test.ply -o /srv/test/result/ -md 35 -n 1000
-    
+    Default parameter mode: python3 /opt/code/pipeline.py -i /srv/test/test.ply -o /srv/test/result/
 
-Arguments:
+    User define parameter mode: python3 /opt/code/pipeline.py -i /srv/test/test.ply -o /srv/test/result/ --min_dis 35 --n_slices 1000
 
-("-md", "--min_dis", dest = "min_dis", required = False, type = int, default = 35,   help = "min distance for watershed segmentation")
-("-n", "--n_slices", dest = "n_slices", required = False, type = int, default = 1000 , help = 'Number of slices for 3d model.')
+
+INPUT:
+
+    3D bean root model
+
+OUTPUT:
+
+    Excel file contains traits computation results
+
+
+
+
+PARAMETERS:
+
+    ("--min_dis", dest = "min_dis", required = False, type = int, default = 35,   help = "min distance for watershed segmentation")
+    ("--n_slices", dest = "n_slices", required = False, type = int, default = 1000 , help = 'Number of slices for 3d model.')
 
 """
 
@@ -195,9 +208,9 @@ if __name__ == '__main__':
     #ap.add_argument("-p", "--path", dest = "path", required = True, type = str, help = "path to 3D model file")
     #ap.add_argument("-ft", "--filetype", dest = "filetype", type = str, required = False, default = 'ply', help = "3D model file filetype, default *.ply")
     ap.add_argument("-o", "--output_path", dest = "output_path", required = False, type = str, help = "result path")
-    ap.add_argument("-md", "--min_dis", dest = "min_dis", required = False, type = int, default = 35,   help = "min distance for watershed segmentation")
-    ap.add_argument("-n", "--n_slices", dest = "n_slices", required = False, type = int, default = 1000 , help = 'Number of slices for 3d model.')
-    ap.add_argument("-v", "--visualize_model", dest = "visualize_model", required = False, type = int, default = 0, help = "Display model or not, deafult as no due to headless display in cluster")
+    ap.add_argument("--min_dis", dest = "min_dis", required = False, type = int, default = 35,   help = "min distance for watershed segmentation")
+    ap.add_argument("--n_slices", dest = "n_slices", required = False, type = int, default = 1000 , help = 'Number of slices for 3d model.')
+    ap.add_argument("--visualize_model", dest = "visualize_model", required = False, type = int, default = 0, help = "Display model or not, deafult as no due to headless display in cluster")
     
     args = vars(ap.parse_args())
     
