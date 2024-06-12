@@ -116,7 +116,7 @@ Remote Sensing. 2019, 11(18), 2074.
 
 
 # Author
-Suxing Liu (suxingliu@gmail.com), Wesley Paul Bonelli(wbonelli@uga.edu), Alexander Bucksch(bucksch@arizona.edu), William Alexander Lavoy(wlavoy@arizona.edu)
+Suxing Liu (suxingliu@gmail.com), William Alexander Lavoy(wlavoy@arizona.edu), Wesley Paul Bonelli(wbonelli@uga.edu), Alexander Bucksch(bucksch@arizona.edu) 
 
 
 ## Other contributions
