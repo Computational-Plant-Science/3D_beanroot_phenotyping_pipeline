@@ -70,13 +70,13 @@ Antoher way is to download prebuild docker image directly from Docker hub. In ou
 1. Build docker image on your PC under linux environment
 ```shell
 
-git clone https://github.com/Computational-Plant-Science/3D_model_traits_demo.git
+git clone https://github.com/Computational-Plant-Science/3D_beanroot_phenotyping_pipeline.git
 
 docker build -t 3d-model-traits -f Dockerfile .
 ```
 2. Download prebuild docker image directly from Docker hub, without building docker image on your local PC 
 ```shell
-docker pull computationalplantscience/3d-model-traits
+docker pull computationalplantscience/3d_beanroot_pipeline
 ```
 3. Run the pipeline inside the docker container 
 
@@ -86,7 +86,7 @@ docker run -v /$path_to_your_3D_model:/srv/test -it 3d-model-traits
 
 or 
 
-docker run -v /$path_to_your_3D_model:/srv/test -it computationalplantscience/3d-model-traits
+docker run -v /$path_to_your_3D_model:/srv/test -it computationalplantscience/3d_beanroot_pipeline
 
 ```
 
