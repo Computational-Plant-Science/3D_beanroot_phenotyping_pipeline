@@ -1,0 +1,48 @@
+name: DIRT\3d_sorghum_phenotyping
+author: Suxing Liu
+image: docker://computationalplantscience/3d_beanroot_pipeline
+public: True
+commands: /opt/code/bean.sh
+doi:
+
+input:
+  kind: directory
+  path:
+  filetypes:
+    - ply
+
+   
+output:
+  path:
+  include:
+    patterns:
+      - xyz
+      - ply
+      - stl
+      - obj
+      - gz
+      - xlsx
+      
+params:
+  - name: min_dis
+    type: number
+    default: 35
+    step: 1
+    min: 1
+    max: 100
+  - name: n_slices
+    type: number
+    default: 1000
+    step: 1
+    min: 500
+    max: 1500
+
+env:
+  - LC_ALL=C.UTF-8
+  - LANG=C.UTF-8
+
+jobqueue:
+  walltime: "04:00:00"
+  memory: "32GB"
+  processes: 1
+  cores: 1

@@ -1,5 +1,5 @@
 # run pipeline
-python3 /opt/code/pipeline.py -i $INPUT -o $OUTPUT 
+python3 /opt/code/pipeline.py -i $INPUT -o $OUTPUT --min_dis $MIN_DIS --n_slices $N_SLICES
 
 # copy nested output files to working directory
 find . -type f -name "*.xyz" -exec cp {} $WORKDIR \;

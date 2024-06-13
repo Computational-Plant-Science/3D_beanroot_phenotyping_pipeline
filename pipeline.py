@@ -19,10 +19,10 @@ INPUT:
 
     3D bean root model
 
+
 OUTPUT:
 
     Excel file contains traits computation results
-
 
 
 
@@ -78,10 +78,10 @@ def execute_script(cmd_line):
 def model_analysis_pipeline(file_path, filename, basename, result_path):
 
     
-    # step 1  python3 /opt/code/model_alignment.py -p ~/example/ -m test.ply  -o ~/example/result/
+    # step 1  python3 /opt/code/model_alignment.py -i ~/example/ -m test.ply  -o ~/example/result/
     print("Transform point cloud model to its rotation center and align its upright orientation with Z direction...\n")
 
-    format_convert = "python3 /opt/code/model_alignment.py -p " + file_path + " -m " + filename + " -o " + result_path
+    format_convert = "python3 /opt/code/model_alignment.py -i " + file_path + filename + " -o " + result_path
     
     print(format_convert)
     

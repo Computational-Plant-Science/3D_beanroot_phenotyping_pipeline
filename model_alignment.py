@@ -9,18 +9,25 @@ Author-email: suxingliu@gmail.com
 
 USAGE
 
-    python3 model_alignment.py -p ~/example/ -m test.ply -o ~/example/result/
+    python3 model_alignment.py -i ~/example/test.ply -o ~/example/result/   --slicing_ratio 0.1
 
 
-argument:
-("-p", "--path", dest = "path", type = str, required = True, help = "path to *.ply model file")
-("-m", "--model", dest = "model", type = str, required = False, help = "model file name")
-("-o", "--output_path", dest = "output_path", type = str, required = False, help = "result path")
+INPUT:
+
+    3D root model
+    
+OUTPUT:
+
+    *.xyz: xyz format file only contains 3D coordinates of points 
+    
+    *_aligned.ply: aligned 3D model with Z axis
 
 
-output:
-*.xyz: xyz format file only has 3D coordinates of points 
-*_aligned.ply: aligned model with only 3D coordinates of points 
+PARAMETERS:
+    ("-i", "--input", dest="input", type=str, required=True, help="full path to 3D model file")
+    ("-o", "--output_path", dest = "output_path", type = str, required = False, help = "result path")
+    ("--slicing_ratio", dest = "slicing_ratio", type = float, required = False, default = 0.10, help = "ratio of slicing the model from the bottom")
+
 
 """
 #!/usr/bin/env python
@@ -86,6 +93,7 @@ def sort_index(lst, rev):
     
 
 
+
 # slice array based on Z values
 def get_pt_sel(Data_array_pt):
     
@@ -107,6 +115,8 @@ def get_pt_sel(Data_array_pt):
     
     
     return Z_pt_sel
+
+
 
 
 # compute dimensions of point cloud 
@@ -138,11 +148,31 @@ def get_pt_parameter(Data_array_pt):
         
     return pt_diameter_max, pt_diameter_min, pt_diameter
     
-    
 
+
+
+
+# get file information from the file path using python3
+def get_file_info(file_full_path):
     
+    p = pathlib.Path(file_full_path)
+
+    filename = p.name
+
+    basename = p.stem
+
+    file_path = p.parent.absolute()
+
+    file_path = os.path.join(file_path, '')
+
+    return file_path, filename, basename
+
+
+
+
+
 # align  ply model with z axis
-def model_alignment(model_file, result_path):
+def model_alignment(model_file):
     
     
     # Load a ply point cloud
@@ -263,19 +293,6 @@ def model_alignment(model_file, result_path):
     pts_bottom = get_pt_sel(np.asarray(pcd_r.points))
     
     
-    '''
-    ############################################################
-    pcd_Z_mask = o3d.geometry.PointCloud()
-    
-    pcd_Z_mask.points = o3d.utility.Vector3dVector(pts_bottom)
-    
-    Z_mask_ply = result_path + "Z_mask.ply"
-    
-    o3d.visualization.draw_geometries([pcd_Z_mask])
-    
-    o3d.io.write_point_cloud(Z_mask_ply, pcd_Z_mask)
-    ############################################################
-    '''
     
     
     (ptb_diameter_max, ptb_diameter_min, ptb_diameter) = get_pt_parameter(pts_bottom)
@@ -308,66 +325,7 @@ def model_alignment(model_file, result_path):
     # return aligned model file
     return pcd_r
     
-    '''
-    ##########################################################################################
-    # visualize the bounding box and center lines
-    # get the model center
-    center = obb.get_center()
-    
-    center_pts = []
-    
-    center_pts.append(center_0)
-    center_pts.append(center_1)
-    
-    center_pts = np.asarray(center_pts)
-    
-    #print(center_vector)
-    
-    
-    
-    # define a LineSet with a set of points and a set of edges (pairs of point indices)
-    lines = [[0,1],[0,2],[0,3],
-            [3,5],[3,6],
-            [4,5],[4,6],[4,7],
-            [7,1],[7,2],
-            [5,2],[6,1]]
 
-    colors = [[1, 0, 0] for i in range(len(lines))]
-
-    line_set = o3d.geometry.LineSet()
-    line_set.points = o3d.utility.Vector3dVector(np_points)
-    line_set.lines = o3d.utility.Vector2iVector(lines)
-    line_set.colors = o3d.utility.Vector3dVector(colors)
-    
-    center_line = [[0,1]]
-
-    colors = [[1, 0, 0] for i in range(len(center_line))]
-    
-    line_set_center = o3d.geometry.LineSet()
-    line_set_center.points = o3d.utility.Vector3dVector(center_pts)
-    line_set_center.lines = o3d.utility.Vector2iVector(center_line)
-    line_set_center.colors = o3d.utility.Vector3dVector(colors)
-    
-    
-    # Creating a mesh of the XYZ axes Cartesian coordinates frame.
-    # This mesh will show the directions in which the X, Y & Z-axes point,
-    # and can be overlaid on the 3D mesh to visualize its orientation in the Euclidean space.
-    # X-axis : Red arrow
-    # Y-axis : Green arrow
-    # Z-axis : Blue arrow
-    coord_frame = o3d.geometry.TriangleMesh.create_coordinate_frame(size = 0.5, origin=[0, 0, 0])
-    
-    vis = o3d.visualization.Visualizer()
-    vis.create_window()
-    vis.add_geometry(line_set)
-    vis.add_geometry(line_set_center)
-    vis.add_geometry(pcd_coord)
-    vis.add_geometry(coord_frame)
-    vis.get_render_option().line_width = 5
-    vis.get_render_option().point_size = 10
-    vis.run()
-    ###################################################################################################
-    '''
     
 
     
@@ -380,14 +338,80 @@ if __name__ == '__main__':
     
     # construct the argument and parse the arguments
     ap = argparse.ArgumentParser()
-    ap.add_argument("-p", "--path", dest = "path", type = str, required = True, help = "path to *.ply model file")
-    ap.add_argument("-m", "--model", dest = "model", type = str, required = False, help = "model file name")
+    ap.add_argument("-i", "--input", dest="input", type=str, required=True, help="full path to 3D model file")
     ap.add_argument("-o", "--output_path", dest = "output_path", type = str, required = False, help = "result path")
-    ap.add_argument("-sr", "--slicing_ratio", dest = "slicing_ratio", type = float, required = False, default = 0.10, help = "ratio of slicing the model from the bottom")
+    #ap.add_argument("-p", "--path", dest = "path", type = str, required = True, help = "path to *.ply model file")
+    #ap.add_argument("-m", "--model", dest = "model", type = str, required = False, help = "model file name")
+    ap.add_argument("--slicing_ratio", dest = "slicing_ratio", type = float, required = False, default = 0.10, help = "ratio of slicing the model from the bottom")
 
     args = vars(ap.parse_args())
 
 
+    
+    # single input file processing
+    ###############################################################################
+    if os.path.isfile(args["input"]):
+
+        input_file = args["input"]
+
+        (file_path, filename, basename) = get_file_info(input_file)
+
+        print("Compute {} model orientation and aligning models...\n".format(file_path, filename, basename))
+
+        # result path
+        result_path = args["output_path"] if args["output_path"] is not None else file_path
+
+        result_path = os.path.join(result_path, '')
+
+        # print out result path
+        print("results_folder: {}\n".format(result_path))
+        
+        # cross-section
+        slicing_ratio = args["slicing_ratio"]
+
+
+
+        # start pipeline
+        ########################################################################################
+        # model alignment 
+        pcd_r = model_alignment(input_file)
+        
+        
+        
+        ####################################################################
+        # write aligned 3d model as ply file format
+        # get file information
+
+        #Save model file as ascii format in ply
+        result_filename = result_path + basename + '_aligned.ply'
+
+        #write out point cloud file
+        o3d.io.write_point_cloud(result_filename, pcd_r, write_ascii = True)
+        
+        #Save modelfilea as ascii format in xyz
+        result_filename = result_path + basename + '.xyz'
+        o3d.io.write_point_cloud(result_filename, pcd_r, write_ascii = True)
+    
+
+        # check saved file
+        if os.path.exists(result_filename):
+            print("Converted 3d model was saved at {0}\n".format(result_filename))
+
+        else:
+            print("Model file converter failed!\n")
+
+
+    else:
+
+        print("The input file is missing or not readable!\n")
+
+        print("Exiting the program...")
+
+        sys.exit(0)
+    
+
+    ###########################################################################
+    '''
     # setting path to model file 
     current_path = args["path"]
     filename = args["model"]
@@ -456,5 +480,5 @@ if __name__ == '__main__':
         print("Model file converter failed!\n")
         sys.exit(0)
         
-        
-
+    '''
+    #####################################################################
