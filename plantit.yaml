@@ -1,4 +1,4 @@
-name: DIRT\3d_sorghum_phenotyping
+name: DIRT\3d_beanroot_phenotyping
 author: Suxing Liu
 image: docker://computationalplantscience/3d_beanroot_pipeline
 public: True
