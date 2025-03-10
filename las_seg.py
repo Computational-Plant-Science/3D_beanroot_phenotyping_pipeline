@@ -371,16 +371,21 @@ if __name__ == '__main__':
         # assign color values for current segmentation points
         color_array[row_indices,:] = np.array(color_rgb)
         
-
+    
+    
+    row_indices = [i for i, x in enumerate(pt_index) if x == unique_pt_index[1]] 
+    
     
     # Create an Open3D point cloud object
     pcd = o3d.geometry.PointCloud()
+    
+    #pcd.points = o3d.utility.Vector3dVector(points[row_indices,:])
     
     pcd.points = o3d.utility.Vector3dVector(points)
     
     #pcd.paint_uniform_color(color_rgb)
     
-    pcd.colors = o3d.utility.Vector3dVector(color_array)
+    #pcd.colors = o3d.utility.Vector3dVector(color_array)
     
     #pcd.paint_uniform_color([0, 0, 1])
     
@@ -389,13 +394,13 @@ if __name__ == '__main__':
     
 
     
-    #result_path = current_path + basename + '.ply'
+    result_path = current_path + basename + '_0.xyz'
     
-    #print ("results_folder: {}\n".format(result_path))
+    print ("results_folder: {}\n".format(result_path))
 
 
     #write out point cloud file
-    #o3d.io.write_point_cloud(result_path, pcd, write_ascii = True)
+    o3d.io.write_point_cloud(result_path, pcd, write_ascii = True)
     
     
     
