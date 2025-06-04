@@ -9,7 +9,7 @@ Author-email: suxingliu@gmail.com
 
 USAGE
 
-    python3 skeleton_loader_vis.py -p ~/example/ -m1 test_skeleton.ply -m2 test.ply
+    python3 skeleton_loader_vis.py -p /input_path/ -m1 test_skeleton.ply -m2 test.ply
 
 
 argument:
